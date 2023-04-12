@@ -99,6 +99,9 @@ def mock_s3_resource(context: InitResourceContext) -> MagicMock:
     return s3_mock
 
 
+# Week 2 project:
+# Adds resource configurations for decorators tha wrap S3 and Redis cients
+# New resources are used in ops
 @resource(
     config_schema={
         "bucket": Field(String),
