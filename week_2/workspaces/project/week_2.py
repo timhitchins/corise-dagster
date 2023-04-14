@@ -81,7 +81,7 @@ def machine_learning_graph():
     put_s3_data(aggregation)
 
 
-# set resource and op confis to pass to jobs
+# set resource and op confgs to pass to jobs
 local = {
     "resources": {
         "redis": {"config": REDIS},
@@ -103,9 +103,13 @@ docker = {
 machine_learning_job_local = machine_learning_graph.to_job(
     name="machine_learning_job_local",
     config=local,
+    # use mocks
     resource_defs={"s3": mock_s3_resource, "redis": ResourceDefinition.mock_resource()},
 )
 
 machine_learning_job_docker = machine_learning_graph.to_job(
-    name="machine_learning_job_docker", config=docker, resource_defs={"s3": s3_resource, "redis": redis_resource}
+    # use "produciton" resources
+    name="machine_learning_job_docker",
+    config=docker,
+    resource_defs={"s3": s3_resource, "redis": redis_resource},
 )
