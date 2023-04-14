@@ -28,9 +28,10 @@ from workspaces.types import Aggregation, Stock
 def get_s3_data(context: OpExecutionContext):
     s3_key = context.op_config["s3_key"]
     # use the s3 resource key to call client method
-    stocks = list(context.resources.s3.get_data(s3_key))  # ? why does this not return Stock?
+    csv_lines = context.resources.s3.get_data(s3_key)
+    stocks_obj = [Stock.from_list(line) for line in csv_lines]
     context.log.info("Fetched s3 stocks data")
-    return stocks
+    return stocks_obj
 
 
 @op(
@@ -44,7 +45,7 @@ def process_data(context, stocks):
     return aggregation
 
 
-@op
+@op()
 def put_redis_data():
     pass
 
