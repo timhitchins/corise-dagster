@@ -110,6 +110,6 @@ machine_learning_job_local = machine_learning_graph.to_job(
 machine_learning_job_docker = machine_learning_graph.to_job(
     name="machine_learning_job_docker",
     config=docker,
-    # use "produciton" resources
+    # use production resources
     resource_defs={"s3": s3_resource, "redis": redis_resource},
 )
