@@ -26,10 +26,10 @@ from workspaces.types import Aggregation, Stock
 def get_s3_data(context: OpExecutionContext):
     s3_key = context.op_config["s3_key"]
     # use the s3 resource key to call s3 client method get_data
-    csv_lines = context.resources.s3.get_data(s3_key)
-    stocks_obj = [Stock.from_list(line) for line in csv_lines]
+    s3_lines = context.resources.s3.get_data(s3_key)
+    stocks = list(map(Stock.from_list, s3_lines))
     context.log.info("Fetched s3 stocks data")
-    return stocks_obj
+    return stocks
 
 
 @op(
@@ -67,9 +67,9 @@ def put_redis_data(context: OpExecutionContext, aggregation):
     description="Aggregation written to s3.",
 )
 def put_s3_data(context, aggregation):
-    # use S3_FILE directly
-    s3_key = S3_FILE
-    context.resources.s3.put_data(s3_key, aggregation)
+    key_name = str(aggregation.date)
+    # use the s3 resource key to call the client method put_data
+    context.resources.s3.put_data(key_name, aggregation)
     context.log.info("Aggregation written to S3")
 
 
@@ -108,8 +108,8 @@ machine_learning_job_local = machine_learning_graph.to_job(
 )
 
 machine_learning_job_docker = machine_learning_graph.to_job(
-    # use "produciton" resources
     name="machine_learning_job_docker",
     config=docker,
+    # use "produciton" resources
     resource_defs={"s3": s3_resource, "redis": redis_resource},
 )
