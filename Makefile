@@ -39,7 +39,6 @@ week_3_start:
 week_3_down:
 	@docker compose --env-file=week_3/.course_week --profile dagster down --remove-orphans
 
-
 # Week 4
 .PHONY: week_4_start
 week_4_start:
