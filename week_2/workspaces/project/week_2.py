@@ -113,3 +113,9 @@ machine_learning_job_docker = machine_learning_graph.to_job(
     # use production resources
     resource_defs={"s3": s3_resource, "redis": redis_resource},
 )
+
+# known bug:
+# machine_learning_job_docker won't run in
+# dagit as a job because localstack is not
+# the dirty fix is to start it manually:
+# docker exec -it <container id> bash
