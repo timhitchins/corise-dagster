@@ -17,7 +17,7 @@ x-ucr-service:
   &default-ucr-service
   restart: always
   environment:
-    << : *default-app-vars
+    <<: *default-app-vars
     AWS_ACCESS_KEY_ID: test
     AWS_SECRET_ACCESS_KEY: test
   depends_on:
@@ -32,17 +32,40 @@ x-ucr-service:
 
 services:
 
+  dev:
+    build:
+      <<: *default-build
+      target: dev
+    container_name: dev
+    # restart: on-failure
+    environment:
+      <<: *default-app-vars
+    ports:
+      - "8787:8787"
+    depends_on:
+      - postgresql
+    profiles:
+      - dagster
+    volumes:
+      - ./:/project
+      - ./${COURSE_WEEK}/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./${COURSE_WEEK}/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - dagster_network
+
   # ----------------------------------------- #
   #                  Dagster
   # ----------------------------------------- #
   dagit:
     build:
-      << : *default-build
+      <<: *default-build
       target: dagit
     container_name: dagit
     restart: on-failure
     environment:
-      << : *default-app-vars
+      <<: *default-app-vars
     ports:
       - "3000:3000"
     depends_on:
@@ -59,12 +82,12 @@ services:
 
   dagster-daemon:
     build:
-      << : *default-build
+      <<: *default-build
       target: daemon
     container_name: dagster-daemon
     restart: on-failure
     environment:
-      << : *default-app-vars
+      <<: *default-app-vars
     depends_on:
       - postgresql
     profiles:
@@ -89,8 +112,8 @@ services:
       POSTGRES_PASSWORD: "postgres_password"
     profiles:
       - dagster
-    volumes:
-      - ./${COURSE_WEEK}/postgres-dagster:/var/lib/postgresql/data
+    # volumes:
+    #   - ./${COURSE_WEEK}/postgres-dagster:/var/lib/postgresql/data
     networks:
       - dagster_network
 
@@ -104,7 +127,7 @@ services:
       - dagster_network
 
   localstack:
-    image: localstack/localstack
+    image: localstack/localstack:1.4.0
     container_name: localstack
     ports:
       - "4566:4566"
@@ -124,27 +147,27 @@ services:
   #                   UCR
   # ----------------------------------------- #
   content:
-    << : *default-ucr-service
+    <<: *default-ucr-service
     build:
-      << : *default-build
+      <<: *default-build
       target: content
       args:
         COURSE_WEEK: ${COURSE_WEEK}
     container_name: content
 
   project:
-    << : *default-ucr-service
+    <<: *default-ucr-service
     build:
-      << : *default-build
+      <<: *default-build
       target: project
       args:
         COURSE_WEEK: ${COURSE_WEEK}
     container_name: project
 
   challenge:
-    << : *default-ucr-service
+    <<: *default-ucr-service
     build:
-      << : *default-build
+      <<: *default-build
       target: challenge
       args:
         COURSE_WEEK: ${COURSE_WEEK}
@@ -155,5 +178,5 @@ networks:
     driver: bridge
     name: dagster_network
 
-volumes:
-  postgresql:
+# volumes:
+#   postgresql:
