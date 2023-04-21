@@ -31,7 +31,30 @@ x-ucr-service:
     - dagster_network
 
 services:
-
+###################################################################
+  dev:
+    build:
+      <<: *default-build
+      target: dev
+    container_name: dev
+    # restart: on-failure
+    environment:
+      <<: *default-app-vars
+    ports:
+      - "8787:8787"
+    depends_on:
+      - postgresql
+    profiles:
+      - dagster
+    volumes:
+      - ./:/project
+      - ./${COURSE_WEEK}/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./${COURSE_WEEK}/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /tmp/io_manager_storage:/tmp/io_manager_storage
+    networks:
+      - dagster_network
+####################################################################
   # ----------------------------------------- #
   #                  Dagster
   # ----------------------------------------- #
