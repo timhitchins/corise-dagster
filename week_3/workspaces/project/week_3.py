@@ -73,9 +73,9 @@ def put_redis_data(context: OpExecutionContext, aggregation):
     out=Out(dagster_type=Nothing),
     required_resource_keys={"s3"},
     tags={"kind": "s3"},
-    description="Aggregation written to s3.",
+    description="Aggregation written to s3",
 )
-def put_s3_data(context, aggregation):
+def put_s3_data(context: OpExecutionContext, aggregation):
     key_name = str(aggregation.date)
     # use the s3 resource key to call the client method put_data
     context.resources.s3.put_data(key_name, aggregation)
@@ -90,60 +90,12 @@ def machine_learning_graph():
     put_s3_data(aggregation)
 
 
-# @op
-# def get_s3_data():
-#     pass
-
-
-# @op
-# def process_data():
-#     pass
-
-
-# @op
-# def put_redis_data():
-#     pass
-
-
-# @op
-# def put_s3_data():
-#     pass
-
-
-# @graph
-# def machine_learning_graph():
-#     pass
-
-# # Call job on graph
-# machine_learning_job_local = machine_learning_graph.to_job(
-#     name="machine_learning_job_local",
-#     config=local,
-#     # use mocks
-#     resource_defs={"s3": mock_s3_resource, "redis": ResourceDefinition.mock_resource()},
-# )
-
-# machine_learning_job_docker = machine_learning_graph.to_job(
-#     name="machine_learning_job_docker",
-#     config=docker,
-#     # use production resources
-#     resource_defs={"s3": s3_resource, "redis": redis_resource},
-# )
-
 local = {
     "ops": {"get_s3_data": {"config": {"s3_key": "prefix/stock_9.csv"}}},
 }
 
-
-docker = {
-    "resources": {
-        "s3": {"config": S3},
-        "redis": {"config": REDIS},
-    },
-    "ops": {"get_s3_data": {"config": {"s3_key": "prefix/stock_9.csv"}}},
-}
-
-
-@static_partitioned_config(partition_keys=["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"])
+# partition config for static items
+@static_partitioned_config(partition_keys=[str(i) for i in range(1, 11, 1)])
 def docker_config(partition_key: str):
     return {
         "resources": {
@@ -157,13 +109,15 @@ def docker_config(partition_key: str):
 machine_learning_job_local = machine_learning_graph.to_job(
     name="machine_learning_job_local",
     config=local,
-    #     # use mocks
+    # use mocks
     resource_defs={"s3": mock_s3_resource, "redis": ResourceDefinition.mock_resource()},
 )
 
 machine_learning_job_docker = machine_learning_graph.to_job(
     name="machine_learning_job_docker",
+    # 10 retires with a delay of 1 secornd
     op_retry_policy=RetryPolicy(max_retries=10, delay=1),
+    # use partitioned docker config
     config=docker_config,
     resource_defs={"s3": s3_resource, "redis": redis_resource},
 )
@@ -173,20 +127,28 @@ machine_learning_schedule_local = ScheduleDefinition(job=machine_learning_job_lo
 
 # Every hour fire configured machine_learning_job_docker
 @schedule(cron_schedule="0 * * * *", job=machine_learning_job_docker)
-def machine_learning_schedule_docker():
-    pass
+def machine_learning_schedule_docker(context):
+    for partition_key in docker_config.get_partition_keys():
+        # Yield a run request with partition configs
+        context.log.info(f"Runnng shceduled job for {partition_key}")
+        yield RunRequest(
+            run_key=partition_key,
+            # use config defined in docker config
+            run_config=docker_config.get_run_config_for_partition_key(partition_key),
+        )
 
 
 @sensor(job=machine_learning_job_docker, minimum_interval_seconds=30)
-def machine_learning_sensor_docker(context):
-    new_files = get_s3_keys(bucket="dagster", prefix="prefix", endpoint_url="http://localstack:4566")
+def machine_learning_sensor_docker(context: SensorEvaluationContext):
+    s3_keys = get_s3_keys(bucket="dagster", prefix="prefix", endpoint_url="http://localstack:4566")
 
-    if not new_files:
+    if not s3_keys:
         yield SkipReason("No new s3 files found in bucket.")
         return
-    for new_file in new_files:
+    for s3_key in s3_keys:
+        context.log.info(f"Runnng sensor job for {s3_key}")
         yield RunRequest(
-            run_key=new_file,
+            run_key=s3_key,
             run_config={
                 # pass in the resources required for the job
                 "resources": {
@@ -194,7 +156,7 @@ def machine_learning_sensor_docker(context):
                     "redis": {"config": REDIS},
                 },
                 "ops": {
-                    "get_s3_data": {"config": {"s3_key": new_file}},
+                    "get_s3_data": {"config": {"s3_key": s3_key}},
                 },
             },
         )
