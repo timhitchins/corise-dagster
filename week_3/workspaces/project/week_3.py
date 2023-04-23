@@ -94,7 +94,7 @@ local = {
     "ops": {"get_s3_data": {"config": {"s3_key": "prefix/stock_9.csv"}}},
 }
 
-# partition config for static items
+# partition config for static items (i.e. table names)
 @static_partitioned_config(partition_keys=[str(i) for i in range(1, 11, 1)])
 def docker_config(partition_key: str):
     return {
@@ -122,10 +122,11 @@ machine_learning_job_docker = machine_learning_graph.to_job(
     resource_defs={"s3": s3_resource, "redis": redis_resource},
 )
 
-# Every 15 mins fire configured machine_learning_job_docker
+# Every 15 mins fire configured to local job
 machine_learning_schedule_local = ScheduleDefinition(job=machine_learning_job_local, cron_schedule="*/15 * * * *")
 
-# Every hour fire configured machine_learning_job_docker
+# Every hour fire configured docker job
+# this schedule uses a decortor because we need to acceess the partition in the finction body
 @schedule(cron_schedule="0 * * * *", job=machine_learning_job_docker)
 def machine_learning_schedule_docker(context):
     for partition_key in docker_config.get_partition_keys():
@@ -138,6 +139,7 @@ def machine_learning_schedule_docker(context):
         )
 
 
+# Set sensor with a 30s polling interval
 @sensor(job=machine_learning_job_docker, minimum_interval_seconds=30)
 def machine_learning_sensor_docker(context: SensorEvaluationContext):
     s3_keys = get_s3_keys(bucket="dagster", prefix="prefix", endpoint_url="http://localstack:4566")
