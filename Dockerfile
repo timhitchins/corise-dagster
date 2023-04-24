@@ -42,6 +42,10 @@ RUN pip3 install --no-cache-dir --upgrade pip==21.3.1 setuptools==60.2.0 wheel==
     poetry config virtualenvs.path "$VIRTUAL_ENV" && \
     poetry install --no-root --no-interaction --no-ansi --no-dev
 
+# Install R packages
+RUN install2.r --error \
+    janitor
+
 # ODBC driver installation
 # SQL Server
 # https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver16&tabs=ubuntu18-install%2Calpine17-install%2Cdebian8-install%2Credhat7-13-install%2Crhel7-offline 
@@ -64,7 +68,7 @@ RUN wget ${ORA_FTP_ENDPOINT}/oracle-instantclient-basic-21.8.0.0.0-1.x86_64.rpm 
     && wget ${ORA_FTP_ENDPOINT}/oracle-instantclient-devel-21.8.0.0.0-1.x86_64.rpm -P ${ORA_DIR}
 
 
-# # Install instant client and ODBC driver
+# Install instant client and ODBC driver
 RUN alien -i ${ORA_DIR}/oracle-instantclient-basic-21.8.0.0.0-1.x86_64.rpm \
     && alien -i ${ORA_DIR}/oracle-instantclient-odbc-21.8.0.0.0-1.x86_64.rpm \
     && alien -i ${ORA_DIR}/oracle-instantclient-devel-21.8.0.0.0-1.x86_64.rpm
@@ -82,7 +86,6 @@ RUN echo '' | tee -a /etc/odbcinst.ini \
     && echo 'UsageCount=1' | tee -a /etc/odbcinst.ini \
     && echo 'FileUsage=1' | tee -a /etc/odbcinst.ini
 
-
 # ----------------------------------------- #
 #                  Runner
 # ----------------------------------------- #
@@ -92,9 +95,11 @@ ARG COURSE_WEEK
 ENV PATH="$VIRTUAL_ENV/bin:$POETRY_HOME/bin:$PATH"
 
 RUN groupadd -r dagster && useradd -m -r -g dagster dagster
+# RUN usermod -a -G dagster rstudio
+
 COPY --from=builder $VIRTUAL_ENV $VIRTUAL_ENV
 COPY --from=builder --chown=dagster $DAGSTER_HOME $DAGSTER_HOME
-COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
+# COPY --from=builder /usr/local/lib/R/site-library /usr/local/lib/R/site-library
 COPY --from=builder $POETRY_HOME $POETRY_HOME
 # ODBC
 COPY --from=builder $ORA_DIR $ORA_DIR
@@ -154,6 +159,8 @@ FROM runner as dev
 ENV PATH="$VIRTUAL_ENV/bin:$POETRY_HOME/bin:$PATH"
 ENV DISABLE_AUTH=true
 USER root:root
+# RUN usermod -a -G dagster rstudio
+# USER rstudio:rstudio
 WORKDIR /project
 COPY . /project
 EXPOSE 8787

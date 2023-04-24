@@ -1,1 +1,1 @@
-source("renv/activate.R")
+print("Set up /project/.Rprofile")
