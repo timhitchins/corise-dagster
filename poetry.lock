@@ -20,7 +20,7 @@ test = ["coverage (>=3.7.1)", "cssselect (>=0.9.1)", "lxml (>=3.6.0)", "pytest",
 
 [[package]]
 name = "alembic"
-version = "1.10.2"
+version = "1.10.3"
 description = "A database migration tool for SQLAlchemy."
 category = "main"
 optional = false
@@ -157,8 +157,19 @@ optional = false
 python-versions = ">=3.7,<4.0"
 
 [[package]]
+name = "backports.zoneinfo"
+version = "0.2.1"
+description = "Backport of the standard library zoneinfo module"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+tzdata = ["tzdata"]
+
+[[package]]
 name = "beautifulsoup4"
-version = "4.12.0"
+version = "4.12.2"
 description = "Screen-scraping library"
 category = "main"
 optional = false
@@ -340,7 +351,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-test = ["hypothesis (==3.55.3)", "flake8 (==3.7.8)"]
+test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
 name = "coverage"
@@ -355,7 +366,7 @@ toml = ["tomli"]
 
 [[package]]
 name = "croniter"
-version = "1.3.8"
+version = "1.3.14"
 description = "croniter provides iteration for datetime object with cron like format"
 category = "main"
 optional = false
@@ -366,7 +377,7 @@ python-dateutil = "*"
 
 [[package]]
 name = "dagit"
-version = "1.2.4"
+version = "1.3.1"
 description = "Web UI for dagster."
 category = "main"
 optional = false
@@ -374,8 +385,8 @@ python-versions = "*"
 
 [package.dependencies]
 click = ">=7.0,<9.0"
-dagster = "1.2.4"
-dagster-graphql = "1.2.4"
+dagster = "1.3.1"
+dagster-graphql = "1.3.1"
 starlette = "*"
 uvicorn = {version = "*", extras = ["standard"]}
 
@@ -385,7 +396,7 @@ test = ["starlette"]
 
 [[package]]
 name = "dagster"
-version = "1.2.4"
+version = "1.3.1"
 description = "The data orchestration platform built for productivity."
 category = "main"
 optional = false
@@ -430,7 +441,7 @@ test = ["docker", "grpcio-tools (>=1.44.0)", "mock (==3.0.5)", "objgraph", "pyte
 
 [[package]]
 name = "dagster-aws"
-version = "0.18.4"
+version = "0.19.1"
 description = "Package for AWS-specific Dagster framework solid and resource components."
 category = "main"
 optional = false
@@ -438,7 +449,7 @@ python-versions = "*"
 
 [package.dependencies]
 boto3 = "*"
-dagster = "1.2.4"
+dagster = "1.3.1"
 packaging = "*"
 requests = "*"
 
@@ -449,44 +460,45 @@ test = ["moto (>=2.2.8)", "requests-mock", "xmltodict (==0.12.0)"]
 
 [[package]]
 name = "dagster-dbt"
-version = "0.18.4"
+version = "0.19.1"
 description = "A Dagster integration for dbt"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-dagster = "1.2.4"
+dagster = "1.3.1"
 dbt-core = ">=1.1"
+networkx = "*"
 requests = "*"
 typer = {version = "*", extras = ["all"]}
 
 [package.extras]
-test = ["jinja2", "dbt-rpc (<0.3.0)", "dbt-postgres"]
+test = ["jinja2", "dbt-rpc (<0.3.0)", "dbt-duckdb", "dagster-duckdb", "dagster-duckdb-pandas"]
 
 [[package]]
 name = "dagster-docker"
-version = "0.18.4"
+version = "0.19.1"
 description = "A Dagster integration for docker"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-dagster = "1.2.4"
+dagster = "1.3.1"
 docker = "*"
 docker-image-py = "*"
 
 [[package]]
 name = "dagster-graphql"
-version = "1.2.4"
+version = "1.3.1"
 description = "The GraphQL frontend to python dagster."
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-dagster = "1.2.4"
+dagster = "1.3.1"
 gql = {version = ">=3.0.0", extras = ["requests"]}
 graphene = ">=3"
 requests = "*"
@@ -494,26 +506,26 @@ starlette = "*"
 
 [[package]]
 name = "dagster-postgres"
-version = "0.18.4"
+version = "0.19.1"
 description = "A Dagster integration for postgres"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-dagster = "1.2.4"
+dagster = "1.3.1"
 psycopg2-binary = "*"
 
 [[package]]
 name = "dagstermill"
-version = "0.18.4"
+version = "0.19.1"
 description = "run notebooks using the Dagster tools"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-dagster = "1.2.4"
+dagster = "1.3.1"
 ipykernel = ">=4.9.0,<5.4.0 || >5.4.0,<5.4.1 || >5.4.1"
 ipython-genutils = ">=0.2.0"
 jupyter-client = "<8"
@@ -579,7 +591,7 @@ psycopg2-binary = ">=2.8,<3.0"
 
 [[package]]
 name = "debugpy"
-version = "1.6.6"
+version = "1.6.7"
 description = "An implementation of the Debug Adapter Protocol for Python"
 category = "main"
 optional = false
@@ -694,11 +706,11 @@ attrs = ">=19.2.0"
 flake8 = ">=3.0.0"
 
 [package.extras]
-dev = ["pre-commit", "hypothesmith (>=0.2)", "hypothesis", "coverage"]
+dev = ["coverage", "hypothesis", "hypothesmith (>=0.2)", "pre-commit"]
 
 [[package]]
 name = "fsspec"
-version = "2023.3.0"
+version = "2023.4.0"
 description = "File-system specification"
 category = "main"
 optional = false
@@ -709,7 +721,9 @@ abfs = ["adlfs"]
 adl = ["adlfs"]
 arrow = ["pyarrow (>=1)"]
 dask = ["dask", "distributed"]
+devel = ["pytest", "pytest-cov"]
 dropbox = ["dropboxdrivefs", "requests", "dropbox"]
+full = ["adlfs", "aiohttp (!=4.0.0a0,!=4.0.0a1)", "dask", "distributed", "dropbox", "dropboxdrivefs", "fusepy", "gcsfs", "libarchive-c", "ocifs", "panel", "paramiko", "pyarrow (>=1)", "pygit2", "requests", "s3fs", "smbprotocol", "tqdm"]
 fuse = ["fusepy"]
 gcs = ["gcsfs"]
 git = ["pygit2"]
@@ -929,7 +943,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "importlib-metadata"
-version = "6.1.0"
+version = "6.6.0"
 description = "Read metadata from Python packages"
 category = "main"
 optional = false
@@ -1117,8 +1131,8 @@ pyrsistent = ">=0.14.0"
 six = ">=1.11.0"
 
 [package.extras]
-format_nongpl = ["rfc3339-validator", "rfc3986-validator (>0.1.0)", "webcolors", "jsonpointer (>1.13)", "idna"]
-format = ["webcolors", "strict-rfc3339", "rfc3987", "jsonpointer (>1.13)", "idna"]
+format = ["idna", "jsonpointer (>1.13)", "rfc3987", "strict-rfc3339", "webcolors"]
+format_nongpl = ["idna", "jsonpointer (>1.13)", "webcolors", "rfc3986-validator (>0.1.0)", "rfc3339-validator"]
 
 [[package]]
 name = "jupyter-client"
@@ -1307,8 +1321,8 @@ toml = "*"
 typing-extensions = ">=3.7.4"
 
 [package.extras]
-python2 = ["typed-ast (>=1.4.0,<1.5.0)"]
 dmypy = ["psutil (>=4.0)"]
+python2 = ["typed-ast (>=1.4.0,<1.5.0)"]
 
 [[package]]
 name = "mypy-extensions"
@@ -1320,7 +1334,7 @@ python-versions = ">=2.7"
 
 [[package]]
 name = "nbclient"
-version = "0.7.2"
+version = "0.7.3"
 description = "A client library for executing notebooks. Formerly nbconvert's ExecutePreprocessor."
 category = "main"
 optional = false
@@ -1334,12 +1348,12 @@ traitlets = ">=5.3"
 
 [package.extras]
 dev = ["pre-commit"]
-docs = ["autodoc-traits", "mock", "moto", "myst-parser", "nbclient", "sphinx-book-theme", "sphinx (>=1.7)"]
-test = ["ipykernel", "ipython", "ipywidgets", "nbconvert (>=7.0.0)", "pytest-asyncio", "pytest-cov (>=4.0)", "pytest (>=7.0)", "testpath", "xmltodict"]
+docs = ["autodoc-traits", "mock", "moto", "myst-parser", "nbclient", "sphinx-book-theme", "sphinx (>=1.7)", "sphinxcontrib-spelling"]
+test = ["flaky", "ipykernel", "ipython", "ipywidgets", "nbconvert (>=7.0.0)", "pytest-asyncio", "pytest-cov (>=4.0)", "pytest (>=7.0)", "testpath", "xmltodict"]
 
 [[package]]
 name = "nbconvert"
-version = "7.2.10"
+version = "7.3.1"
 description = "Converting Jupyter Notebooks"
 category = "main"
 optional = false
@@ -1415,7 +1429,7 @@ test = ["pytest (>=7.2)", "pytest-cov (>=4.0)", "codecov (>=2.1)"]
 
 [[package]]
 name = "numpy"
-version = "1.24.2"
+version = "1.24.3"
 description = "Fundamental package for array computing in Python"
 category = "main"
 optional = false
@@ -1431,7 +1445,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "pandas"
-version = "1.5.3"
+version = "2.0.0"
 description = "Powerful data structures for data analysis, time series, and statistics"
 category = "main"
 optional = false
@@ -1442,11 +1456,32 @@ numpy = [
     {version = ">=1.20.3", markers = "python_version < \"3.10\""},
     {version = ">=1.21.0", markers = "python_version >= \"3.10\""},
 ]
-python-dateutil = ">=2.8.1"
+python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
+tzdata = ">=2022.1"
 
 [package.extras]
-test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
+all = ["beautifulsoup4 (>=4.9.3)", "bottleneck (>=1.3.2)", "brotlipy (>=0.7.0)", "fastparquet (>=0.6.3)", "fsspec (>=2021.07.0)", "gcsfs (>=2021.07.0)", "html5lib (>=1.1)", "hypothesis (>=6.34.2)", "jinja2 (>=3.0.0)", "lxml (>=4.6.3)", "matplotlib (>=3.6.1)", "numba (>=0.53.1)", "numexpr (>=2.7.3)", "odfpy (>=1.4.1)", "openpyxl (>=3.0.7)", "pandas-gbq (>=0.15.0)", "psycopg2 (>=2.8.6)", "pyarrow (>=7.0.0)", "pymysql (>=1.0.2)", "PyQt5 (>=5.15.1)", "pyreadstat (>=1.1.2)", "pytest (>=7.0.0)", "pytest-xdist (>=2.2.0)", "pytest-asyncio (>=0.17.0)", "python-snappy (>=0.6.0)", "pyxlsb (>=1.0.8)", "qtpy (>=2.2.0)", "scipy (>=1.7.1)", "s3fs (>=2021.08.0)", "SQLAlchemy (>=1.4.16)", "tables (>=3.6.1)", "tabulate (>=0.8.9)", "xarray (>=0.21.0)", "xlrd (>=2.0.1)", "xlsxwriter (>=1.4.3)", "zstandard (>=0.15.2)"]
+aws = ["s3fs (>=2021.08.0)"]
+clipboard = ["PyQt5 (>=5.15.1)", "qtpy (>=2.2.0)"]
+compression = ["brotlipy (>=0.7.0)", "python-snappy (>=0.6.0)", "zstandard (>=0.15.2)"]
+computation = ["scipy (>=1.7.1)", "xarray (>=0.21.0)"]
+excel = ["odfpy (>=1.4.1)", "openpyxl (>=3.0.7)", "pyxlsb (>=1.0.8)", "xlrd (>=2.0.1)", "xlsxwriter (>=1.4.3)"]
+feather = ["pyarrow (>=7.0.0)"]
+fss = ["fsspec (>=2021.07.0)"]
+gcp = ["gcsfs (>=2021.07.0)", "pandas-gbq (>=0.15.0)"]
+hdf5 = ["tables (>=3.6.1)"]
+html = ["beautifulsoup4 (>=4.9.3)", "html5lib (>=1.1)", "lxml (>=4.6.3)"]
+mysql = ["SQLAlchemy (>=1.4.16)", "pymysql (>=1.0.2)"]
+output_formatting = ["jinja2 (>=3.0.0)", "tabulate (>=0.8.9)"]
+parquet = ["pyarrow (>=7.0.0)"]
+performance = ["bottleneck (>=1.3.2)", "numba (>=0.53.1)", "numexpr (>=2.7.1)"]
+plot = ["matplotlib (>=3.6.1)"]
+postgresql = ["SQLAlchemy (>=1.4.16)", "psycopg2 (>=2.8.6)"]
+spss = ["pyreadstat (>=1.1.2)"]
+sql-other = ["SQLAlchemy (>=1.4.16)"]
+test = ["hypothesis (>=6.34.2)", "pytest (>=7.0.0)", "pytest-xdist (>=2.2.0)", "pytest-asyncio (>=0.17.0)"]
+xml = ["lxml (>=4.6.3)"]
 
 [[package]]
 name = "pandocfilters"
@@ -1569,8 +1604,8 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-testing = ["pytest-benchmark", "pytest"]
-dev = ["tox", "pre-commit"]
+dev = ["pre-commit", "tox"]
+testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "prompt-toolkit"
@@ -1585,7 +1620,7 @@ wcwidth = "*"
 
 [[package]]
 name = "protobuf"
-version = "4.22.1"
+version = "4.22.3"
 description = ""
 category = "main"
 optional = false
@@ -1593,7 +1628,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "psutil"
-version = "5.9.4"
+version = "5.9.5"
 description = "Cross-platform lib for process and system monitoring in Python."
 category = "main"
 optional = false
@@ -1689,11 +1724,11 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "pygments"
-version = "2.14.0"
+version = "2.15.1"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.extras]
 plugins = ["importlib-metadata"]
@@ -1733,7 +1768,7 @@ py = ">=1.8.2"
 toml = "*"
 
 [package.extras]
-testing = ["xmlschema", "requests", "nose", "mock", "hypothesis (>=3.56)", "argcomplete"]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
 name = "pytest-cov"
@@ -1749,7 +1784,7 @@ pytest = ">=4.6"
 toml = "*"
 
 [package.extras]
-testing = ["virtualenv", "pytest-xdist", "six", "process-tests", "hunter", "fields"]
+testing = ["fields", "hunter", "process-tests", "six", "pytest-xdist", "virtualenv"]
 
 [[package]]
 name = "python-dateutil"
@@ -1802,6 +1837,18 @@ description = "World timezone definitions, modern and historical"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "pytz-deprecation-shim"
+version = "0.1.0.post0"
+description = "Shims to make deprecation of pytz easier"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
+
+[package.dependencies]
+"backports.zoneinfo" = {version = "*", markers = "python_version >= \"3.6\" and python_version < \"3.9\""}
+tzdata = {version = "*", markers = "python_version >= \"3.6\""}
 
 [[package]]
 name = "pytzdata"
@@ -1907,6 +1954,28 @@ typing-extensions = {version = ">=4.0.0,<5.0", markers = "python_version < \"3.9
 jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
 
 [[package]]
+name = "rpy2"
+version = "3.5.11"
+description = "Python interface to the R language (embedded R)"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+cffi = ">=1.10.0"
+jinja2 = "*"
+packaging = {version = "*", markers = "platform_system == \"Windows\""}
+pytz = "*"
+tzlocal = "*"
+
+[package.extras]
+all = ["pytest", "ipython", "pandas (>=1.3.5)", "numpy"]
+pandas = ["numpy", "pandas (>=1.3.5)"]
+test = ["pytest", "ipython", "numpy", "pandas (>=1.3.5)"]
+test_minimal = ["pytest", "coverage", "pytest-cov"]
+types = ["mypy", "types-pytz", "types-tzlocal"]
+
+[[package]]
 name = "s3transfer"
 version = "0.6.0"
 description = "An Amazon S3 Transfer Manager"
@@ -1969,7 +2038,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "soupsieve"
-version = "2.4"
+version = "2.4.1"
 description = "A modern CSS selector implementation for Beautiful Soup."
 category = "main"
 optional = false
@@ -2133,11 +2202,11 @@ python-versions = "*"
 
 [[package]]
 name = "tornado"
-version = "6.2"
+version = "6.3.1"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
 category = "main"
 optional = false
-python-versions = ">= 3.7"
+python-versions = ">= 3.8"
 
 [[package]]
 name = "tqdm"
@@ -2195,6 +2264,30 @@ description = "Backported and Experimental Type Hints for Python 3.7+"
 category = "main"
 optional = false
 python-versions = ">=3.7"
+
+[[package]]
+name = "tzdata"
+version = "2023.3"
+description = "Provider of IANA time zone data"
+category = "main"
+optional = false
+python-versions = ">=2"
+
+[[package]]
+name = "tzlocal"
+version = "4.3"
+description = "tzinfo object for the local timezone"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+"backports.zoneinfo" = {version = "*", markers = "python_version < \"3.9\""}
+pytz-deprecation-shim = "*"
+tzdata = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+devenv = ["black", "check-manifest", "flake8", "pyroma", "pytest-cov", "pytest-mock (>=3.3)", "pytest (>=4.3)", "zest.releaser"]
 
 [[package]]
 name = "universal-pathlib"
@@ -2311,7 +2404,7 @@ test = ["websockets"]
 
 [[package]]
 name = "websockets"
-version = "10.4"
+version = "11.0.2"
 description = "An implementation of the WebSocket Protocol (RFC 6455 & 7692)"
 category = "main"
 optional = false
@@ -2333,7 +2426,7 @@ watchdog = ["watchdog"]
 
 [[package]]
 name = "yarl"
-version = "1.8.2"
+version = "1.9.1"
 description = "Yet another URL library"
 category = "main"
 optional = false
@@ -2358,7 +2451,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "flake8 (<5)", "pytest-co
 [metadata]
 lock-version = "1.1"
 python-versions = "<3.11,>=3.8.0"
-content-hash = "103d092f432ed3d66907b07a8b212b64a574123a171b0f0944522fc8a3a0a4c3"
+content-hash = "294e53c0539d7dd583b402a67a39115f652e80d01dbe3d8b78350f60fe3524f5"
 
 [metadata.files]
 agate = []
@@ -2374,6 +2467,7 @@ attrs = []
 babel = []
 backcall = []
 backoff = []
+"backports.zoneinfo" = []
 beautifulsoup4 = []
 betterproto = []
 black = []
@@ -2498,6 +2592,7 @@ python-dotenv = []
 python-slugify = []
 pytimeparse = []
 pytz = []
+pytz-deprecation-shim = []
 pytzdata = []
 pywin32 = []
 pyyaml = []
@@ -2507,6 +2602,7 @@ regex = []
 requests = []
 requests-toolbelt = []
 rich = []
+rpy2 = []
 s3transfer = []
 scrapbook = []
 shellingham = []
@@ -2531,6 +2627,8 @@ tqdm = []
 traitlets = []
 typer = []
 typing-extensions = []
+tzdata = []
+tzlocal = []
 universal-pathlib = []
 urllib3 = []
 uvicorn = []
