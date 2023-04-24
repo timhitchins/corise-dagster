@@ -1,7 +1,7 @@
 # ----------------------------------------- #
 #                 Base
 # ----------------------------------------- #
-# FROM python:3.8.5-slim AS base
+
 FROM rocker/geospatial:4.2.2 AS base 
 ARG COURSE_WEEK
 ENV VIRTUAL_ENV=/opt/venv
@@ -125,32 +125,32 @@ CMD ["dagster-daemon", "run"]
 # ----------------------------------------- #
 #              Code Locations
 # ----------------------------------------- #
-FROM runner AS content
-ENV DAGSTER_CURRENT_IMAGE=corise-dagster-answer-key_content
-ARG COURSE_WEEK
-COPY ${COURSE_WEEK}/workspaces/ ./workspaces
+FROM runner AS gems
+# ENV DAGSTER_CURRENT_IMAGE=corise-dagster-answer-key_content
+# ARG COURSE_WEEK
+COPY pipeline/workspaces/ ./workspaces
 # USER dagster:dagster
 USER root:root
 EXPOSE 4000
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-f", "workspaces/content/deployment.py"]
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4000", "-f", "workspaces/gems/deployment.py"]
 
-FROM runner AS project
-ENV DAGSTER_CURRENT_IMAGE=corise-dagster-answer-key_project
-ARG COURSE_WEEK
-COPY ${COURSE_WEEK}/workspaces/ ./workspaces
+FROM runner AS gdw
+# ENV DAGSTER_CURRENT_IMAGE=corise-dagster-answer-key_project
+# ARG COURSE_WEEK
+COPY pipeline/workspaces/ ./workspaces
 # USER dagster:dagster
 USER root:root
 EXPOSE 4001
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4001", "-f", "workspaces/project/deployment.py"]
+CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4001", "-f", "workspaces/gdw/deployment.py"]
 
-FROM runner AS challenge
-ENV DAGSTER_CURRENT_IMAGE=corise-dagster-answer-key_challenge
-ARG COURSE_WEEK
-COPY ${COURSE_WEEK}/workspaces/ ./workspaces
-# USER dagster:dagster
-USER root:root
-EXPOSE 4002
-CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4002", "-f", "workspaces/challenge/deployment.py"]
+# FROM runner AS challenge
+# # ENV DAGSTER_CURRENT_IMAGE=corise-dagster-answer-key_challenge
+# ARG COURSE_WEEK
+# COPY ${COURSE_WEEK}/workspaces/ ./workspaces
+# # USER dagster:dagster
+# USER root:root
+# EXPOSE 4002
+# CMD ["dagster", "api", "grpc", "-h", "0.0.0.0", "-p", "4002", "-f", "workspaces/challenge/deployment.py"]
 
 # ----------------------------------------- #
 #                  Dev

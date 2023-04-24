@@ -1,6 +1,6 @@
 from dagster import Definitions
 from workspaces.config import REDIS, S3
-from workspaces.project.week_4 import (
+from workspaces.gdw.gdw import (
     machine_learning_asset_job,
     machine_learning_schedule,
     project_assets,

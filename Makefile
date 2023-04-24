@@ -50,6 +50,15 @@ week_4_down:
 	@docker compose --env-file=week_4/.course_week --profile dagster down --remove-orphans
 
 
+# Week 4
+.PHONY: week_5_start
+week_5_start:
+	@docker compose --env-file=week_5/.course_week --profile dagster up -d --build
+
+.PHONY: week_5_down
+week_5_down:
+	@docker compose --env-file=week_5/.course_week --profile dagster down --remove-orphans
+
 # Restart UCRs
 .PHONY: restart_content
 restart_content:
@@ -62,3 +71,11 @@ restart_project:
 .PHONY: restart_challenge
 restart_challenge:
 	@docker container restart $$(docker ps -aqf "name=challenge")
+
+.PHONY: pipeline_start
+pipeline_start:
+	@docker compose --profile dagster up -d --build
+
+.PHONY: pipeline_down
+pipeline_down:
+	@docker compose --profile dagster down --remove-orphans

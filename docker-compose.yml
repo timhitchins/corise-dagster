@@ -25,13 +25,12 @@ x-ucr-service:
   profiles:
     - dagster
   volumes:
-    - ./${COURSE_WEEK}/workspaces:/opt/dagster/dagster_home/workspaces
+    - ./pipeline/workspaces:/opt/dagster/dagster_home/workspaces
     - ./dbt_test_project:/opt/dagster/dagster_home/dbt_test_project
   networks:
     - dagster_network
 
 services:
-###################################################################
   dev:
     build:
       <<: *default-build
@@ -48,13 +47,13 @@ services:
       - dagster
     volumes:
       - ./:/project
-      - ./${COURSE_WEEK}/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
-      - ./${COURSE_WEEK}/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - ./pipeline/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./pipeline/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
       - dagster_network
-####################################################################
+
   # ----------------------------------------- #
   #                  Dagster
   # ----------------------------------------- #
@@ -73,8 +72,8 @@ services:
     profiles:
       - dagster
     volumes:
-      - ./${COURSE_WEEK}/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
-      - ./${COURSE_WEEK}/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - ./pipeline/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./pipeline/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
@@ -93,8 +92,8 @@ services:
     profiles:
       - dagster
     volumes:
-      - ./${COURSE_WEEK}/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
-      - ./${COURSE_WEEK}/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
+      - ./pipeline/dagster.yaml:/opt/dagster/dagster_home/dagster.yaml
+      - ./pipeline/workspace.yaml:/opt/dagster/dagster_home/workspace.yaml
       - /var/run/docker.sock:/var/run/docker.sock
       - /tmp/io_manager_storage:/tmp/io_manager_storage
     networks:
@@ -113,7 +112,7 @@ services:
     profiles:
       - dagster
     volumes:
-      - ./${COURSE_WEEK}/postgres-dagster:/var/lib/postgresql/data
+      - ./pipeline/postgres-dagster:/var/lib/postgresql/data
     networks:
       - dagster_network
 
@@ -138,40 +137,40 @@ services:
       AWS_SECRET_ACCESS_KEY: test
       DEFAULT_REGION: us-east-1
     volumes:
-      - ./${COURSE_WEEK}/data://opt/code/localstack/data
-      - ./${COURSE_WEEK}/local_stack.sh:/docker-entrypoint-initaws.d/create_localstack_infra.sh
+      - ./pipeline/data://opt/code/localstack/data
+      - ./pipeline/local_stack.sh:/docker-entrypoint-initaws.d/create_localstack_infra.sh
     networks:
       - dagster_network
 
   # ----------------------------------------- #
   #                   UCR
   # ----------------------------------------- #
-  content:
+  gems:
     << : *default-ucr-service
     build:
       << : *default-build
-      target: content
-      args:
-        COURSE_WEEK: ${COURSE_WEEK}
-    container_name: content
+      target: gems
+      # args:
+      #   COURSE_WEEK: pipeline
+    container_name: gems
 
-  project:
+  gdw:
     << : *default-ucr-service
     build:
       << : *default-build
-      target: project
-      args:
-        COURSE_WEEK: ${COURSE_WEEK}
-    container_name: project
+      target: gdw
+      # args:
+      #   COURSE_WEEK: pipeline
+    container_name: gdw
 
-  challenge:
-    << : *default-ucr-service
-    build:
-      << : *default-build
-      target: challenge
-      args:
-        COURSE_WEEK: ${COURSE_WEEK}
-    container_name: challenge
+  # challenge:
+  #   << : *default-ucr-service
+  #   build:
+  #     << : *default-build
+  #     target: challenge
+  #     args:
+  #       COURSE_WEEK: pipeline
+  #   container_name: challenge
 
 networks:
   dagster_network:

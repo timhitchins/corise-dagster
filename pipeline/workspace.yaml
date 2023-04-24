@@ -1,0 +1,10 @@
+---
+load_from:
+  - grpc_server:
+      host: gems
+      port: 4000
+      location_name: gems
+  - grpc_server:
+      host: gdw
+      port: 4001
+      location_name: gdw

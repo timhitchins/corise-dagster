@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 import pytest
 from dagster import AssetKey, build_op_context
 from workspaces.config import REDIS, S3
-from workspaces.project.week_4 import (
+from workspaces.gdw.gdw import (
     get_s3_data,
     process_data,
     put_redis_data,
